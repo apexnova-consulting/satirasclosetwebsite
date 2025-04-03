@@ -1,29 +1,5 @@
-"use client";
-
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import { signIn } from "next-auth/react";
-import { motion } from "framer-motion";
 import { Suspense } from 'react';
 import { SignInForm } from '@/components/auth/SignInForm';
-import { Metadata } from 'next';
-
-interface FormData {
-  email: string;
-  password: string;
-}
-
-interface FormErrors {
-  email?: string;
-  password?: string;
-}
-
-export const metadata: Metadata = {
-  title: 'Sign In - Satira\'s Closet',
-  description: 'Sign in to your account',
-};
 
 export default function SignInPage() {
   return (

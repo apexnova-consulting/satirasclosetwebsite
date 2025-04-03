@@ -1,38 +1,5 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { useSession } from "next-auth/react";
-import { motion } from "framer-motion";
 import { Suspense } from 'react';
 import { CheckoutForm } from '@/components/checkout/CheckoutForm';
-import { Metadata } from 'next';
-
-// Sample cart state - in a real app, this would come from a state management store like Zustand
-const sampleCartItems = [
-  {
-    id: "f1",
-    name: "Vintage Wooden Cabinet",
-    price: 299,
-    quantity: 1,
-    image: "/images/products/cabinet.jpg",
-    isAuction: false
-  },
-  {
-    id: "a1",
-    name: "Designer Silk Scarf",
-    price: 95,
-    quantity: 1,
-    image: "/images/products/scarf.jpg",
-    isAuction: false
-  }
-];
-
-export const metadata: Metadata = {
-  title: 'Checkout - Satira\'s Closet',
-  description: 'Complete your purchase',
-};
 
 export default function CheckoutPage() {
   return (
