@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { AuthProvider } from "@/providers/AuthProvider";
+import AuthProvider from "@/providers/AuthProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({
