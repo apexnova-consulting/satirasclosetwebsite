@@ -30,6 +30,7 @@ interface Product {
     price: number;
     image: string;
   }>;
+  details: string[];
 }
 
 interface ProductsMap {
@@ -54,6 +55,13 @@ const SAMPLE_PRODUCTS: ProductsMap = {
       "/images/products/cabinet-2.jpg",
       "/images/products/cabinet-3.jpg",
       "/images/products/cabinet-4.jpg"
+    ],
+    details: [
+      "Material: 100% hand-spun wool",
+      "Size: 8' x 10'",
+      "Origin: Isfahan, Iran",
+      "Age: Approximately 75 years",
+      "Condition: Excellent vintage condition"
     ]
   }
 };
@@ -71,6 +79,7 @@ export default function ProductPage() {
   const [timeLeft, setTimeLeft] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     if (!product?.isAuction || !product?.endTime) return;
@@ -156,6 +165,11 @@ export default function ProductPage() {
     setIsWishlisted(!isWishlisted);
   };
   
+  const handleAddToCart = () => {
+    // Implement cart functionality
+    console.log("Added to cart:", { ...product, quantity });
+  };
+  
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-12 flex justify-center items-center min-h-[60vh]">
@@ -180,215 +194,124 @@ export default function ProductPage() {
   }
   
   return (
-    <div className="bg-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <nav className="flex mb-8 text-sm">
-          <a href="/" className="text-gray-500 hover:text-indigo-600">Home</a>
-          <span className="mx-2 text-gray-500">/</span>
-          <a href={`/category/${product.category}`} className="text-gray-500 hover:text-indigo-600">
-            {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
-          </a>
-          <span className="mx-2 text-gray-500">/</span>
-          <span className="text-gray-900">{product.name}</span>
-        </nav>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Product Images */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="relative h-96 md:h-[500px] rounded-lg overflow-hidden mb-4 bg-gray-100">
+    <div className="min-h-screen bg-cream py-12">
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12"
+        >
+          {/* Image Gallery */}
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
+              className="relative aspect-square rounded-lg overflow-hidden border-islamic"
+            >
               <Image
                 src={product.images[selectedImage]}
                 alt={product.name}
                 fill
-                style={{ objectFit: "contain" }}
-                priority
+                style={{ objectFit: "cover" }}
+                className="transition-transform duration-500 hover:scale-105"
               />
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.map((image: string, index: number) => (
-                <div 
-                  key={index} 
-                  className={`relative h-24 cursor-pointer rounded-md overflow-hidden border-2 ${
-                    selectedImage === index ? 'border-indigo-600' : 'border-transparent hover:border-gray-300'
-                  }`}
+            </motion.div>
+            <div className="grid grid-cols-4 gap-4">
+              {product.images.map((image, index) => (
+                <motion.button
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   onClick={() => setSelectedImage(index)}
+                  className={`relative aspect-square rounded-md overflow-hidden ${
+                    selectedImage === index ? "ring-2 ring-gold" : ""
+                  }`}
                 >
                   <Image
                     src={image}
-                    alt={`${product.name} - View ${index + 1}`}
+                    alt={`${product.name} view ${index + 1}`}
                     fill
                     style={{ objectFit: "cover" }}
                   />
-                </div>
+                </motion.button>
               ))}
             </div>
-          </motion.div>
-          
+          </div>
+
           {/* Product Info */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="space-y-8"
           >
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
-            
-            {product.isAuction ? (
-              <div className="mb-6">
-                <div className="flex items-center space-x-2 mb-2">
-                  <span className="text-gray-600">Current Bid:</span>
-                  <span className="text-3xl font-bold text-indigo-600">${product.currentBid}</span>
-                </div>
-                <div className="flex items-center text-gray-600 mb-4">
-                  <Clock size={20} className="mr-1" />
-                  <span className="font-medium">{timeLeft}</span>
-                  <span className="mx-2">•</span>
-                  <span>{product.bidCount} bids placed</span>
-                </div>
-                
-                <form onSubmit={handleBidSubmit} className="mb-4">
-                  <div className="flex">
-                    <div className="relative flex-grow">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-gray-500">$</span>
-                      </div>
-                      <input
-                        type="number"
-                        step="0.01"
-                        value={bidAmount}
-                        onChange={(e) => setBidAmount(e.target.value)}
-                        className={`block w-full pl-7 pr-12 py-3 border ${
-                          bidError ? 'border-red-500' : 'border-gray-300'
-                        } rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500`}
-                        placeholder="Enter your bid"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="bg-indigo-600 text-white px-6 py-3 rounded-r-md font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition"
-                    >
-                      Place Bid
-                    </button>
-                  </div>
-                  {bidError && <p className="mt-2 text-red-500 text-sm">{bidError}</p>}
-                  <p className="mt-2 text-sm text-gray-500">
-                    Enter ${(product.currentBid + (product.minBidIncrement || 10)).toFixed(2)} or more
-                  </p>
-                </form>
-                
-                {product.price && (
-                  <button
-                    onClick={handleBuyNow}
-                    className="w-full bg-green-600 text-white py-3 rounded-md font-semibold hover:bg-green-700 transition mb-4"
+            <div>
+              <h1 className="text-4xl font-playfair mb-4">{product.name}</h1>
+              <p className="text-2xl text-gold font-playfair">
+                ${product.price.toLocaleString()}
+              </p>
+            </div>
+
+            <p className="text-gray-700 leading-relaxed">{product.description}</p>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-playfair">Product Details</h3>
+              <ul className="space-y-2">
+                {product.details.map((detail, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+                    className="flex items-center space-x-2"
                   >
-                    Buy Now: ${product.price}
-                  </button>
-                )}
-              </div>
-            ) : (
-              <div className="mb-6">
-                <div className="flex items-center space-x-2 mb-4">
-                  <span className="text-3xl font-bold text-green-600">${product.price}</span>
-                </div>
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full bg-green-600 text-white py-3 rounded-md font-semibold hover:bg-green-700 transition mb-4"
+                    <span className="text-gold">•</span>
+                    <span>{detail}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center space-x-4">
+                <label htmlFor="quantity" className="font-medium">
+                  Quantity
+                </label>
+                <select
+                  id="quantity"
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-gold"
                 >
-                  Add to Cart
-                </button>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
               </div>
-            )}
-            
-            <div className="flex space-x-4 mb-8">
-              <button
-                onClick={toggleWishlist}
-                className={`flex items-center px-4 py-2 rounded-md border ${
-                  isWishlisted 
-                    ? 'border-indigo-600 text-indigo-600 bg-indigo-50' 
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
-                } transition`}
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleAddToCart}
+                className="w-full bg-gold hover:bg-gold/90 text-white py-4 rounded-md font-medium transition-colors"
               >
-                <Heart size={20} className={`mr-2 ${isWishlisted ? 'fill-current' : ''}`} />
-                {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
-              </button>
+                Add to Cart
+              </motion.button>
+
               <button
-                className="flex items-center px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                onClick={() => router.back()}
+                className="w-full text-center text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <Share size={20} className="mr-2" />
-                Share
+                ← Back to {product.category}
               </button>
-            </div>
-            
-            <div className="prose max-w-none mb-8">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-700">{product.description}</p>
-            </div>
-            
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex">
-                  <span className="font-medium text-gray-900 w-24">Condition:</span>
-                  <span className="text-gray-700">{product.condition}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium text-gray-900 w-24">Material:</span>
-                  <span className="text-gray-700">{product.material}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium text-gray-900 w-24">Dimensions:</span>
-                  <span className="text-gray-700">{product.dimensions}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium text-gray-900 w-24">Shipping:</span>
-                  <span className="text-gray-700">{product.shipping}</span>
-                </div>
-                <div className="flex">
-                  <span className="font-medium text-gray-900 w-24">Seller:</span>
-                  <span className="text-gray-700">{product.seller}</span>
-                </div>
-              </div>
             </div>
           </motion.div>
-        </div>
-        
-        {/* Related Products */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {product.relatedProducts?.map((related, index) => (
-              <motion.div
-                key={related.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-              >
-                <a href={`/product/${related.id}`}>
-                  <div className="relative h-48">
-                    <Image
-                      src={related.image}
-                      alt={related.name}
-                      fill
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{related.name}</h3>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-green-600">${related.price}</span>
-                      <span className="text-sm text-indigo-600">View Details</span>
-                    </div>
-                  </div>
-                </a>
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        </motion.div>
       </div>
       
       {/* Login Prompt Modal */}
