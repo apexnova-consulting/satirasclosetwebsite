@@ -1,32 +1,66 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { Clock, Heart, Share } from "lucide-react";
 
-const ProductPage = ({ id }: { id: string }) => {
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  currentBid: number;
+  minBidIncrement: number;
+  bidCount: number;
+  isAuction: boolean;
+  endTime: string;
+  category: string;
+  images: string[];
+}
+
+interface ProductsMap {
+  [key: string]: Product;
+}
+
+// Sample product data - in a real app, this would come from an API
+const SAMPLE_PRODUCTS: ProductsMap = {
+  "f1": {
+    id: "f1",
+    name: "Vintage Wooden Cabinet",
+    description: "Beautiful vintage wooden cabinet in excellent condition",
+    price: 299,
+    currentBid: 250,
+    minBidIncrement: 10,
+    bidCount: 5,
+    isAuction: true,
+    endTime: "2024-05-01T00:00:00Z",
+    category: "furniture",
+    images: [
+      "/images/products/cabinet-1.jpg",
+      "/images/products/cabinet-2.jpg",
+      "/images/products/cabinet-3.jpg",
+      "/images/products/cabinet-4.jpg"
+    ]
+  }
+};
+
+export default function ProductPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
   const session = useSession();
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(SAMPLE_PRODUCTS[id] || null);
   const [bidAmount, setBidAmount] = useState("");
   const [bidError, setBidError] = useState("");
   const [timeLeft, setTimeLeft] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  useEffect(() => {
-    // In a real app, this would be an API call
-    const productDetails = getProductDetails(id as string);
-    setProduct(productDetails);
-    setBidAmount((productDetails.currentBid + productDetails.minBidIncrement).toString());
-    setLoading(false);
-  }, [id]);
-  
   useEffect(() => {
     if (!product?.isAuction || !product?.endTime) return;
     
@@ -53,6 +87,12 @@ const ProductPage = ({ id }: { id: string }) => {
     
     return () => clearInterval(timer);
   }, [product]);
+
+  useEffect(() => {
+    if (product) {
+      setBidAmount((product.currentBid + (product.minBidIncrement || 10)).toString());
+    }
+  }, [product]);
   
   const handleBidSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,6 +101,8 @@ const ProductPage = ({ id }: { id: string }) => {
       setShowLoginPrompt(true);
       return;
     }
+    
+    if (!product) return;
     
     // Simple validation
     const bid = parseFloat(bidAmount);
@@ -74,15 +116,14 @@ const ProductPage = ({ id }: { id: string }) => {
       return;
     }
     
-    if (bid < product.currentBid + product.minBidIncrement) {
-      setBidError(`Minimum bid increment is $${product.minBidIncrement}`);
+    if (bid < product.currentBid + (product.minBidIncrement || 10)) {
+      setBidError(`Minimum bid increment is $${product.minBidIncrement || 10}`);
       return;
     }
     
     // In a real app, this would be an API call to place the bid
     alert(`Your bid of $${bid} has been placed!`);
     setBidError("");
-    // Would update the product data with the new bid in a real app
   };
   
   const handleBuyNow = () => {
@@ -102,7 +143,6 @@ const ProductPage = ({ id }: { id: string }) => {
     }
     
     setIsWishlisted(!isWishlisted);
-    // Would update the wishlist in the database in a real app
   };
   
   if (loading) {
@@ -225,7 +265,7 @@ const ProductPage = ({ id }: { id: string }) => {
                   </div>
                   {bidError && <p className="mt-2 text-red-500 text-sm">{bidError}</p>}
                   <p className="mt-2 text-sm text-gray-500">
-                    Enter ${(product.currentBid + product.minBidIncrement).toFixed(2)} or more
+                    Enter ${(product.currentBid + (product.minBidIncrement || 10)).toFixed(2)} or more
                   </p>
                 </form>
                 
@@ -371,6 +411,4 @@ const ProductPage = ({ id }: { id: string }) => {
       )}
     </div>
   );
-};
-
-export default ProductPage; 
+} 
