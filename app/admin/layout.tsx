@@ -9,7 +9,7 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  if (!session || session.user.role !== "ADMIN") {
+  if (!session?.user?.role || session.user.role !== "ADMIN") {
     redirect("/auth/signin");
   }
 
