@@ -3,16 +3,39 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #2C3E50;
-  --secondary-color: #34495E;
-  --accent-color: #C4A484;
-  --background-color: #F8F7F4;
+  --primary: #2C3E50;
+  --gold: #D4AF37;
+  --cream: #FDFBF7;
+  --text: #1A1A1A;
 }
 
-/* Islamic-inspired geometric pattern overlay */
-.geometric-pattern {
-  background-color: var(--background-color);
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232c3e50' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+body {
+  font-family: var(--font-inter);
+  color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-playfair);
+}
+
+/* Islamic-inspired geometric pattern */
+.bg-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Decorative borders */
+.border-islamic {
+  position: relative;
+}
+
+.border-islamic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='8' viewBox='0 0 40 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v8H0V0zm20 4l10-4v8L20 4zM10 4L0 0v8l10-4zm30 0l-10-4v8l10-4z' fill='%23D4AF37' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 /* Custom scrollbar */
@@ -21,51 +44,17 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background-color);
+  background: var(--cream);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
+  background: var(--primary);
+  border: 3px solid var(--cream);
   border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-color);
-}
-
-/* Typography */
-body {
-  @apply antialiased;
-  font-family: var(--font-inter);
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-playfair);
-}
-
-/* Islamic-inspired decorative borders */
-.border-pattern {
-  position: relative;
-}
-
-.border-pattern::before,
-.border-pattern::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 12px;
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='12' viewBox='0 0 40 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 6l10-6l10 6l10-6l10 6v6H0V6z' fill='%232c3e50' fill-opacity='0.1'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-}
-
-.border-pattern::before {
-  top: 0;
-  transform: rotate(180deg);
-}
-
-.border-pattern::after {
-  bottom: 0;
+  background: var(--gold);
 }
 
 /* Smooth transitions */
@@ -76,53 +65,37 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Card hover effects */
 .card-hover {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card-hover:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-}
-
-/* Button styles */
-.btn {
-  @apply inline-flex items-center justify-center px-6 py-3 rounded-md font-semibold transition-colors duration-200;
-}
-
-.btn-primary {
-  @apply bg-[#2C3E50] text-white hover:bg-[#34495E];
-}
-
-.btn-secondary {
-  @apply bg-white text-[#2C3E50] hover:bg-neutral-100;
-}
-
-/* Form styles */
-.form-input {
-  @apply w-full px-4 py-2 rounded-md border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-[#2C3E50] focus:border-transparent transition-colors;
-}
-
-/* Container styles */
-.container-custom {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Islamic-inspired section dividers */
-.divider {
+.section-divider {
   position: relative;
-  height: 40px;
-  background: transparent;
-  overflow: hidden;
+  height: 60px;
+  margin: 40px 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4AF37' fill-opacity='0.15'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
-.divider::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  height: 20px;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='20' viewBox='0 0 60 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 20H0L30 0z' fill='%232c3e50' fill-opacity='0.1'/%3E%3C/svg%3E");
-  background-repeat: repeat-x;
-  transform: translate(-50%, -50%);
+/* Form inputs */
+.form-input {
+  @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors;
+}
+
+.btn-gold {
+  @apply bg-gold text-white px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors;
+}
+
+/* Container styles */
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 } 
