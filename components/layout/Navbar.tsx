@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Heart, User, SignOut, House } from "phosphor-react";
+import { ShoppingCart, Heart, User, SignOut, House } from "@phosphor-icons/react";
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -44,23 +44,23 @@ export default function Navbar() {
         {/* User Menu */}
         <div className="flex items-center space-x-4">
           <Link href="/wishlist" className="text-gray-700 hover:text-indigo-600">
-            <Heart size={24} />
+            <Heart weight="regular" size={24} />
           </Link>
           <Link href="/cart" className="text-gray-700 hover:text-indigo-600">
-            <ShoppingCart size={24} />
+            <ShoppingCart weight="regular" size={24} />
           </Link>
           
           {session ? (
             <div className="relative group">
               <button className="flex items-center space-x-1">
-                <User size={24} />
-                <span className="hidden md:inline">{session.user.name}</span>
+                <User weight="regular" size={24} />
+                <span className="hidden md:inline">{session.user?.name}</span>
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-2 z-10 hidden group-hover:block">
                 <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
                   Profile
                 </Link>
-                {session.user.role === "ADMIN" && (
+                {session.user?.role === "ADMIN" && (
                   <Link href="/admin" className="block px-4 py-2 hover:bg-gray-100">
                     Admin Dashboard
                   </Link>
@@ -69,7 +69,7 @@ export default function Navbar() {
                   onClick={() => signOut()} 
                   className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
                 >
-                  <SignOut size={18} className="mr-2" />
+                  <SignOut weight="regular" size={18} className="mr-2" />
                   Sign Out
                 </button>
               </div>
