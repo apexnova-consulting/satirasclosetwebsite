@@ -52,13 +52,15 @@ declare module "next-auth" {
   }
 
   interface Session extends DefaultSession {
-    user?: User;
+    user?: User & {
+      role: "USER" | "ADMIN";
+    };
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    role?: "USER" | "ADMIN";
+    role: "USER" | "ADMIN";
   }
 }
 
