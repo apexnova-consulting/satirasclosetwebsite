@@ -2,7 +2,6 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Header } from "@/components/layout/Header";
 import { Providers } from "@/components/providers/Providers";
 import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
@@ -31,8 +30,6 @@ export default function RootLayout({
         <Providers>
           {/* Islamic-inspired geometric pattern overlay */}
           <div className="fixed inset-0 bg-pattern opacity-5 pointer-events-none" />
-          
-          <Header />
           
           <Navigation />
           

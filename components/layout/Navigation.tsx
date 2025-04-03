@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, Heart, Search, User } from "lucide-react";
+import { ShoppingCart, Heart, Search, User, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 const categories = [
   { name: "Furniture", href: "/category/furniture" },
@@ -17,12 +18,31 @@ const categories = [
 export default function Navigation() {
   const pathname = usePathname();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <nav className="bg-white shadow-md">
       {/* Top Bar */}
-      <div className="bg-gold text-white text-center py-2 text-sm">
-        Free shipping on orders over $150
+      <div className="bg-gold text-white text-sm py-2">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <p>Free shipping on orders over $150</p>
+            <div className="flex gap-4">
+              {session ? (
+                <Link href="/account" className="hover:text-primary transition-colors">
+                  My Account
+                </Link>
+              ) : (
+                <Link href="/auth/signin" className="hover:text-primary transition-colors">
+                  Sign In
+                </Link>
+              )}
+              <Link href="/customer-service" className="hover:text-primary transition-colors">
+                Customer Service
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="container mx-auto px-4">
@@ -67,12 +87,39 @@ export default function Navigation() {
             >
               <ShoppingCart size={24} />
             </Link>
-            <Link
-              href="/auth/signin"
-              className="text-gray-600 hover:text-gold transition-colors"
-            >
-              <User size={24} />
-            </Link>
+            
+            {session ? (
+              <div className="relative group">
+                <button className="flex items-center space-x-1 text-gray-600 hover:text-gold transition-colors">
+                  <User size={24} />
+                  <span className="hidden md:inline">{session.user?.name}</span>
+                </button>
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-2 z-10 hidden group-hover:block">
+                  <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">
+                    Profile
+                  </Link>
+                  {session.user?.role === "ADMIN" && (
+                    <Link href="/admin" className="block px-4 py-2 hover:bg-gray-100">
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <button 
+                    onClick={() => signOut()} 
+                    className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+                  >
+                    <LogOut size={18} className="mr-2" />
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="text-gray-600 hover:text-gold transition-colors"
+              >
+                <User size={24} />
+              </Link>
+            )}
           </div>
         </div>
 
