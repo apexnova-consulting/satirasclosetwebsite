@@ -13,19 +13,19 @@ const config: Config = {
         playfair: ['var(--font-playfair)'],
       },
       colors: {
-        primary: {
-          DEFAULT: '#2C3E50',
-          light: '#34495E',
-          dark: '#233140',
-        },
-        accent: {
-          DEFAULT: '#C4A484',
-          light: '#D4B494',
-          dark: '#B49474',
-        },
-        background: {
-          DEFAULT: '#F8F7F4',
-          dark: '#E8E7E4',
+        gold: '#D4AF37',
+        primary: '#1a1a1a',
+        cream: '#FDFBF7',
+      },
+      container: {
+        center: true,
+        padding: '1rem',
+        screens: {
+          sm: '640px',
+          md: '768px',
+          lg: '1024px',
+          xl: '1280px',
+          '2xl': '1536px',
         },
       },
       backgroundImage: {
