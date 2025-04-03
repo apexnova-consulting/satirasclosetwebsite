@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { Calendar, Clock, Upload, X } from "phosphor-react";
+import { Calendar, Clock, Upload, X } from "@phosphor-icons/react";
 
 export default function NewProductPage() {
   const router = useRouter();

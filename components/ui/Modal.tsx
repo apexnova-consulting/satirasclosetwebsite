@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "phosphor-react";
+import { X } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 
 interface ModalProps {
   isOpen: boolean;
