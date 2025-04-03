@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { LineChart, PieChart, BarChart } from "phosphor-react";
+import { ChartLine, ChartPie, ChartBar } from "@phosphor-icons/react";
 
 // Sample data for dashboard
 const salesData = [
@@ -28,12 +28,31 @@ const categorySales = [
   { category: "Toys", amount: 9800 },
 ];
 
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  category: string;
+  type: "BUY_NOW" | "AUCTION" | "BOTH";
+  price: number;
+  status: "IN_STOCK" | "OUT_OF_STOCK" | "ACTIVE";
+}
+
+interface Auction {
+  id: string;
+  product: string;
+  currentBid: number;
+  bidCount: number;
+  endTime: string;
+  status: "ACTIVE" | "ENDED" | "SOLD" | "CANCELLED";
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const session = useSession();
   const [activeTab, setActiveTab] = useState("products");
-  const [products, setProducts] = useState([]);
-  const [activeAuctions, setActiveAuctions] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [activeAuctions, setActiveAuctions] = useState<Auction[]>([]);
 
   useEffect(() => {
     // Fetch products and active auctions

@@ -42,7 +42,10 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zip: "",
-    country: "United States"
+    country: "United States",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: ""
   });
   const [errors, setErrors] = useState({
     firstName: "",
@@ -53,7 +56,10 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zip: "",
-    country: ""
+    country: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: ""
   });
 
   useEffect(() => {
@@ -81,7 +87,10 @@ export default function CheckoutPage() {
       city: formData.city ? "" : "City is required",
       state: formData.state ? "" : "State is required",
       zip: formData.zip ? "" : "ZIP is required",
-      country: formData.country ? "" : "Country is required"
+      country: formData.country ? "" : "Country is required",
+      cardNumber: formData.cardNumber ? "" : "Card number is required",
+      expiryDate: formData.expiryDate ? "" : "Expiry date is required",
+      cvv: formData.cvv ? "" : "CVV is required"
     };
 
     setErrors(newErrors);

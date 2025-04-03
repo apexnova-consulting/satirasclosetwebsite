@@ -19,6 +19,17 @@ interface Product {
   endTime: string;
   category: string;
   images: string[];
+  condition?: string;
+  material?: string;
+  dimensions?: string;
+  shipping?: string;
+  seller?: string;
+  relatedProducts?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+  }>;
 }
 
 interface ProductsMap {
@@ -301,7 +312,7 @@ export default function ProductPage() {
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                 } transition`}
               >
-                <Heart size={20} weight={isWishlisted ? "fill" : "regular"} className="mr-2" />
+                <Heart size={20} className={`mr-2 ${isWishlisted ? 'fill-current' : ''}`} />
                 {isWishlisted ? 'Wishlisted' : 'Add to Wishlist'}
               </button>
               <button
@@ -349,7 +360,7 @@ export default function ProductPage() {
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">You Might Also Like</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {product.relatedProducts.map((related: any, index: number) => (
+            {product.relatedProducts?.map((related, index) => (
               <motion.div
                 key={related.id}
                 initial={{ opacity: 0, y: 20 }}
